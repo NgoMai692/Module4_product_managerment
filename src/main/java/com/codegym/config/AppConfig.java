@@ -22,12 +22,9 @@ import org.thymeleaf.templatemode.TemplateMode;
 @EnableWebMvc
 @Configuration
 @ComponentScan("com.codegym.controller")
-@PropertySource("classpath:upload-file.properties")
 public class AppConfig implements WebMvcConfigurer, ApplicationContextAware {
     private ApplicationContext applicationContext;
 
-    @Value("${file-upload}")
-    private String uploadPath;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -61,20 +58,9 @@ public class AppConfig implements WebMvcConfigurer, ApplicationContextAware {
         return viewResolver;
     }
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        //Override phương thức add resource handler để cấu hình đường dẫn file tĩnh
-        //=> để lưu trữ các file ảnh, mp3, mp4 khi được upload lên server
-        registry.addResourceHandler("/image/**")
-                .addResourceLocations("file:" + uploadPath); //Để khai báo cấu hình lữu trữ trên server
-    }
-
     @Bean
-    public CommonsMultipartResolver multipartResolver() {
-        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-        multipartResolver.setMaxUploadSizePerFile(52428800);//Set dung lượng tối đa khi upload => 5MB // Không giới hạn thì để -1
-        return multipartResolver;
+    public IProductService productService() {
+        return new ProductService();
     }
-
 
 }
